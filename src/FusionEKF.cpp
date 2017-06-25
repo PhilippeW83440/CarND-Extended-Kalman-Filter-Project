@@ -3,6 +3,8 @@
 #include "Eigen/Dense"
 #include <iostream>
 
+#include <time.h>
+
 using namespace std;
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
@@ -112,6 +114,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    *  Prediction
    ****************************************************************************/
 
+  clock_t start = clock();
+
   /**
    TODO:
      * Update the state transition matrix F according to the new elapsed time.
@@ -164,6 +168,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     ekf_.R_ = R_laser_;
     ekf_.Update(measurement_pack.raw_measurements_);
   }
+
+  clock_t stop = clock();
+  double elapsed = (double)(stop - start) * 1000000.0 / CLOCKS_PER_SEC;
+  cout << "Process time in us: " << elapsed << endl;
 
   // print the output
   cout << "x_ = " << ekf_.x_ << endl;
